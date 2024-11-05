@@ -2,7 +2,7 @@
 name = "dockerfile-parser"
 description = "a Rust library for parsing, validating, and modifying Dockerfiles"
 authors = ["Tim Buckley <timothy.jas.buckley@hpe.com>"]
-edition = "2018"
+edition = "2021"
 license = "MIT"
 keywords = ["parser", "docker", "dockerfile", "pest"]
 homepage = "https://github.com/HewlettPackard/dockerfile-parser-rs/"
