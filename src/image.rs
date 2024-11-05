@@ -3,8 +3,8 @@
 use std::collections::{HashMap, HashSet};
 use std::fmt;
 use std::iter::FromIterator;
+use std::sync::LazyLock;
 
-use lazy_static::lazy_static;
 use regex::Regex;
 
 use crate::{Dockerfile, Span, Splicer};
@@ -58,9 +58,9 @@ pub fn substitute<'a, 'b>(
   used_vars: &mut HashSet<String>,
   max_recursion_depth: u8
 ) -> Option<String> {
-  lazy_static! {
-    static ref VAR: Regex = Regex::new(r"\$(?:([A-Za-z0-9_]+)|\{([A-Za-z0-9_]+)\})").unwrap();
-  }
+  static VAR: LazyLock<Regex> = LazyLock::new(||
+    Regex::new(r"\$(?:([A-Za-z0-9_]+)|\{([A-Za-z0-9_]+)\})").unwrap()
+  );
 
   // note: docker also allows defaults in FROMs, e.g.
   //   ARG tag
