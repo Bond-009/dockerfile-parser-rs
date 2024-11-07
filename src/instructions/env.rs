@@ -23,7 +23,7 @@ impl EnvVar {
   pub fn new(span: Span, key: SpannedString, value: impl Into<BreakableString>) -> Self {
     EnvVar {
       span,
-      key: key,
+      key,
       value: value.into(),
     }
   }

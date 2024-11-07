@@ -96,7 +96,7 @@ impl FromInstruction {
       });
     };
 
-    let image_parsed = ImageRef::parse(&image.as_ref());
+    let image_parsed = ImageRef::parse(image.as_ref());
 
     if let Some(hash) = &image_parsed.hash {
       let parts: Vec<&str> = hash.split(":").collect();

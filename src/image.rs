@@ -156,19 +156,13 @@ impl ImageRef {
     let vars: HashMap<&'a str, &'a str> = HashMap::from_iter(
       dockerfile.global_args
         .iter()
-        .filter_map(|a| match a.value.as_ref() {
-          Some(v) => Some((a.name.as_ref(), v.as_ref())),
-          None => None
-        })
+        .filter_map(|a| a.value.as_ref().map(|v| (a.name.as_ref(), v.as_ref())))
     );
 
     let mut used_vars = HashSet::new();
 
-    if let Some(s) = substitute(&self.to_string(), &vars, &mut used_vars, 16) {
-      Some((ImageRef::parse(&s), used_vars))
-    } else {
-      None
-    }
+    substitute(&self.to_string(), &vars, &mut used_vars, 16)
+      .map(|s| (ImageRef::parse(&s), used_vars))
   }
 
   /// Given a Dockerfile (and its global `ARG`s), perform any necessary
