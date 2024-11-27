@@ -310,7 +310,10 @@ pub struct Dockerfile {
   pub global_args: Vec<ArgInstruction>,
 
   /// An ordered list of all parsed instructions, including global_args
-  pub instructions: Vec<Instruction>
+  pub instructions: Vec<Instruction>,
+
+  /// An ordered list of top level comments
+  pub comments: Vec<String>
 }
 
 fn parse_dockerfile(input: &str) -> Result<Dockerfile> {
@@ -321,6 +324,7 @@ fn parse_dockerfile(input: &str) -> Result<Dockerfile> {
 
   let mut instructions = Vec::new();
   let mut global_args = Vec::new();
+  let mut comments = Vec::new();
   let mut from_found = false;
   let mut from_index = 0;
 
@@ -329,9 +333,8 @@ fn parse_dockerfile(input: &str) -> Result<Dockerfile> {
       continue;
     }
 
-    // TODO: consider exposing comments in the parse result
     if let Rule::comment = record.as_rule() {
-      continue;
+      comments.push(record.as_str().to_owned());
     }
 
     let mut instruction = Instruction::try_from(record)?;
@@ -357,7 +360,8 @@ fn parse_dockerfile(input: &str) -> Result<Dockerfile> {
 
   Ok(Dockerfile {
     content: input.into(),
-    global_args, instructions
+    global_args, instructions,
+    comments
   })
 }
 
