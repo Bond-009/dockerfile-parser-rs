@@ -335,6 +335,7 @@ fn parse_dockerfile(input: &str) -> Result<Dockerfile> {
 
     if let Rule::comment = record.as_rule() {
       comments.push(record.as_str().to_owned());
+      continue;
     }
 
     let mut instruction = Instruction::try_from(record)?;
