@@ -24,6 +24,9 @@ pub use entrypoint::*;
 mod cmd;
 pub use cmd::*;
 
+mod workdir;
+pub use workdir::*;
+
 mod misc;
 pub use misc::*;
 

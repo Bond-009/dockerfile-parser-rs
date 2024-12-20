@@ -219,6 +219,7 @@ impl Instruction {
       Instruction::Cmd(instruction) => instruction.span,
       Instruction::Copy(instruction) => instruction.span,
       Instruction::Env(instruction) => instruction.span,
+      Instruction::Workdir(instruction) => instruction.span,
       Instruction::Misc(instruction) => instruction.span,
     }
   }
@@ -244,6 +245,7 @@ impl_from_instruction!(EntrypointInstruction, Instruction::Entrypoint);
 impl_from_instruction!(CmdInstruction, Instruction::Cmd);
 impl_from_instruction!(CopyInstruction, Instruction::Copy);
 impl_from_instruction!(EnvInstruction, Instruction::Env);
+impl_from_instruction!(WorkdirInstruction, Instruction::Workdir);
 impl_from_instruction!(MiscInstruction, Instruction::Misc);
 
 impl TryFrom<Pair<'_>> for Instruction {
@@ -264,6 +266,8 @@ impl TryFrom<Pair<'_>> for Instruction {
       Rule::copy => Instruction::Copy(CopyInstruction::from_record(record)?),
 
       Rule::env => EnvInstruction::from_record(record)?.into(),
+
+      Rule::workdir => WorkdirInstruction::from_record(record)?.into(),
 
       Rule::misc => MiscInstruction::from_record(record)?.into(),
 
