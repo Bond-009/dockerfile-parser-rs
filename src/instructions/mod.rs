@@ -24,6 +24,8 @@ pub use entrypoint::*;
 mod cmd;
 pub use cmd::*;
 
+mod user;
+pub use user::*;
+
 mod misc;
 pub use misc::*;
-

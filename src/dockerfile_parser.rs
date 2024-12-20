@@ -42,7 +42,8 @@ pub enum Instruction {
   Cmd(CmdInstruction),
   Copy(CopyInstruction),
   Env(EnvInstruction),
-  Misc(MiscInstruction)
+  User(UserInstruction),
+  Misc(MiscInstruction),
 }
 
 impl Instruction {
@@ -190,6 +191,24 @@ impl Instruction {
     }
   }
 
+  /// Attempts to convert this instruction into an UserInstruction, returning
+  /// None if impossible.
+  pub fn into_user(self) -> Option<UserInstruction> {
+    match self {
+      Instruction::User(e) => Some(e),
+      _ => None,
+    }
+  }
+
+  /// Attempts to convert this instruction into an UserInstruction, returning
+  /// None if impossible.
+  pub fn as_user(&self) -> Option<&UserInstruction> {
+    match self {
+      Instruction::User(e) => Some(e),
+      _ => None,
+    }
+  }
+
   /// Attempts to convert this instruction into a MiscInstruction, returning
   /// None if impossible.
   pub fn into_misc(self) -> Option<MiscInstruction> {
@@ -219,6 +238,7 @@ impl Instruction {
       Instruction::Cmd(instruction) => instruction.span,
       Instruction::Copy(instruction) => instruction.span,
       Instruction::Env(instruction) => instruction.span,
+      Instruction::User(instruction) => instruction.span,
       Instruction::Misc(instruction) => instruction.span,
     }
   }
@@ -244,6 +264,7 @@ impl_from_instruction!(EntrypointInstruction, Instruction::Entrypoint);
 impl_from_instruction!(CmdInstruction, Instruction::Cmd);
 impl_from_instruction!(CopyInstruction, Instruction::Copy);
 impl_from_instruction!(EnvInstruction, Instruction::Env);
+impl_from_instruction!(UserInstruction, Instruction::User);
 impl_from_instruction!(MiscInstruction, Instruction::Misc);
 
 impl TryFrom<Pair<'_>> for Instruction {
@@ -264,6 +285,8 @@ impl TryFrom<Pair<'_>> for Instruction {
       Rule::copy => Instruction::Copy(CopyInstruction::from_record(record)?),
 
       Rule::env => EnvInstruction::from_record(record)?.into(),
+
+      Rule::user => UserInstruction::from_record(record)?.into(),
 
       Rule::misc => MiscInstruction::from_record(record)?.into(),
 
